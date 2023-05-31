@@ -1,14 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="javascript.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="javascript.svg" />
+    <link rel="stylesheet" type="text/css" href="./style.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo:ital,wght@1,600&display=swap" rel="stylesheet">
+    <style>
+      .font-exo {
+        font-family: 'Exo', sans-serif;
+      }
+    </style>
   </head>
   <body>
-    <div id="app">
+    <div id="app" class = "flex h-screen bg-black text-white">
+      <div class = "w-1/2 flex flex-col justify-center px-14">
+        <h1 class = "text-6xl my-8 font-exo">Pale Blue Dot</h1>
+        <p class = "text-2xl mt-4 text-gray-400">Behold the Pale Blue Dot, our tiny speck in the infinite universe. It beckons us to ponder our existence, our purpose, and our interconnectedness. In its vastness, we find solace and an urgent call to appreciate and safeguard our fragile home</p>
+        <div>
+          <a href = "/" class = "bg-green-600 mt-8 px-10 py-4 inline-block rounded-full">Explore</a>
+        </div>
+      </div>
+      <div id = "canvas-container" class = "w-1/2">
+        <canvas id = "canvas"></canvas>
+      </div>
     </div>
-    <script type="module" src="/main.js"></script>
   </body>
+  <script defer type="module" src="/planet.js"></script>
 </html>

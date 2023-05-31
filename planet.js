@@ -4,21 +4,37 @@ import vertexShader from './shaders/vertex.glsl'
 import fragmentShader from './shaders/fragment.glsl'
 import atmosphereVertex from './shaders/atmosphereVertex.glsl';
 import atmosphereFragment from './shaders/atmosphereFragment.glsl';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import earthTexture from './assets/earth.jpg'
 
-const renderer = new THREE.WebGLRenderer({ antialias : true })
-renderer.setSize(window.innerWidth, window.innerHeight)
-Object.assign(renderer.domElement.style, {
-  position : 'fixed',
-  top: 0,
-  left: 0,
-})
-document.body.appendChild(renderer.domElement)
+
+const canvasContainer = document.querySelector('#canvas-container');
+const renderer = new THREE.WebGLRenderer({ antialias : true, canvas : document.querySelector('#canvas') })
+renderer.setSize(canvasContainer.offsetWidth, canvasContainer.offsetHeight )
 const planet = new THREE.Group();
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+const camera = new THREE.PerspectiveCamera(75, canvasContainer.offsetWidth / canvasContainer.offsetHeight, 0.1, 1000)
 camera.position.z = 40;
+
+const Star = () => {
+  const star = new THREE.Points(
+    new THREE.BufferGeometry(),
+    new THREE.PointsMaterial({ color : 0xFFFFFF})
+  )
+  const starPositions = [];
+  for (let i = 0; i < 1000; i++){
+    const x = (Math.random() - 0.5) * 2000
+    const y = (Math.random() - 0.5) * 2000
+    const z = -(Math.random() * 1000)
+    starPositions.push(x, y, z);
+  }
+  
+  star.geometry.setAttribute(
+    'position', 
+    new THREE.Float32BufferAttribute(starPositions, 3)
+  )
+  scene.add(star)
+}
+Star();
 
 const earth = new THREE.Mesh(
   new THREE.SphereGeometry( 15, 64, 32 ), 
@@ -39,40 +55,22 @@ const atmosphere = new THREE.Mesh(
     vertexShader : atmosphereVertex,
     fragmentShader : atmosphereFragment,
     blending: THREE.AdditiveBlending,
-    side : THREE.BackSide
+    side : THREE.BackSide,
   })
 )
 atmosphere.scale.set(1.2, 1.2, 1.2)
 planet.add(atmosphere)
-
-const star = new THREE.Points(
-  new THREE.BufferGeometry(),
-  new THREE.PointsMaterial({ color : 0xFFFFFF})
-)
-const starPositions = [];
-for (let i = 0; i < 1000; i++){
-  const x = (Math.random() - 0.5) * 2000
-  const y = (Math.random() - 0.5) * 2000
-  const z = -(Math.random() * 1000)
-  starPositions.push(x, y, z);
-}
-
-star.geometry.setAttribute(
-  'position', 
-  new THREE.Float32BufferAttribute(starPositions, 3)
-)
-scene.add(star)
 
 const mouse = {
   x: undefined,
   y: undefined,
 }
 
-console.log(planet)
 scene.add(planet)
 function animate(){
   requestAnimationFrame(animate)
-  earth.rotation.y += .009;
+  let rotatingSpeed = .009;
+  earth.rotation.y += rotatingSpeed;
   gsap.to(planet.rotation,{
     y : mouse.x * 0.9,
     x : -mouse.y * 0.9,
@@ -87,5 +85,5 @@ window.addEventListener('mousemove', (event) => {
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 });
 
-
+console.log(renderer)
 
